@@ -1,0 +1,41 @@
+column_name,category,dtype,unit,description,source
+lga,Identifier,string,-,Official Local Government Area name (20 LGAs in Lagos State),GADM v4.1 (Level 2)
+month,Identifier,date (YYYY-MM-DD),month,First day of the calendar month (2010-01-01 to 2025-12-01),Study grid
+year,Temporal,int,year,Calendar year (2010 to 2025),Derived from month
+month_num,Temporal,int,1-12,"Calendar month number (1 = January, 12 = December)",Derived from month
+flood,Target,binary int,0 or 1,"1 if at least one credible source documents a flood in that LGA-month, else 0","NEMA, LASEMA, NIHSA, EM-DAT, DFO/GFD, News Archive"
+n_events,Target metadata,int,count,Number of distinct documented flood records affecting the LGA in that month,Flood Events Log & DFO
+max_severity,Target metadata,int,0-3 scale,"Maximum reported severity in that month (0=none, 1=street flood, 2=homes/roads submerged, 3=deaths/displacement)",Flood Events Log
+sources,Target metadata,string,-,Source types documenting the flood in that LGA-month (or 'none'),Flood Events Log
+rain_total_mm,Rainfall (Dynamic),float,mm,Total monthly rainfall averaged across the LGA,CHIRPS v2.0 Daily via GEE
+rain_max_daily_mm,Rainfall (Dynamic),float,mm/day,Maximum single-day rainfall within the month,CHIRPS v2.0 Daily via GEE
+rain_max_3day_mm,Rainfall (Dynamic),float,mm / 3 days,Maximum 3-day rolling cumulative rainfall peaking in the month,CHIRPS v2.0 Daily via GEE
+rain_max_7day_mm,Rainfall (Dynamic),float,mm / 7 days,Maximum 7-day rolling cumulative rainfall peaking in the month,CHIRPS v2.0 Daily via GEE
+rainy_days,Rainfall (Dynamic),int,days,Number of days in the month with >= 1 mm rainfall,CHIRPS v2.0 Daily via GEE
+heavy_rain_days,Rainfall (Dynamic),int,days,Number of days in the month with >= 20 mm rainfall,CHIRPS v2.0 Daily via GEE
+rain_prev_month_mm,Rainfall (Antecedent),float,mm,Total rainfall in the immediately preceding month (soil saturation proxy),CHIRPS v2.0 Daily via GEE
+rain_2m_cum_mm,Rainfall (Antecedent),float,mm,Cumulative two-month rainfall (current month + previous month),CHIRPS v2.0 Daily via GEE
+rain_anom_z,Rainfall (Dynamic),float,z-score (std),Standardised monthly rainfall anomaly relative to the LGA's 2010-2020 mean and std,Derived from CHIRPS
+month_sin,Temporal (Cyclical),float,"[-1, 1]",Sine cyclical transform of month_num: sin(2*pi*m/12),Derived from month_num
+month_cos,Temporal (Cyclical),float,"[-1, 1]",Cosine cyclical transform of month_num: cos(2*pi*m/12),Derived from month_num
+elev_mean_m,Terrain (Static),float,metres (m),Mean land elevation above sea level (permanent water masked out),USGS SRTM 30m & JRC GSW via GEE
+elev_median_m,Terrain (Static),float,metres (m),Median land elevation above sea level,USGS SRTM 30m via GEE
+elev_min_m,Terrain (Static),float,metres (m),Minimum land elevation in the LGA,USGS SRTM 30m via GEE
+elev_max_m,Terrain (Static),float,metres (m),Maximum land elevation in the LGA,USGS SRTM 30m via GEE
+elev_std_m,Terrain (Static),float,metres (m),Standard deviation of land elevation in the LGA,USGS SRTM 30m via GEE
+low5_share,Terrain (Static),float,proportion [0-1],Fraction of LGA land area lying below 5 metres elevation,USGS SRTM 30m via GEE
+low10_share,Terrain (Static),float,proportion [0-1],Fraction of LGA land area lying below 10 metres elevation,USGS SRTM 30m via GEE
+slope_mean_deg,Terrain (Static),float,degrees,Mean topographic slope across land pixels in the LGA,USGS SRTM 30m via GEE
+water_share,Hydrology (Static),float,proportion [0-1],"Fraction of total LGA area covered by permanent water (lagoon, creeks, sea)",JRC Global Surface Water v1.4 (30m)
+dist_water_mean_km,Hydrology (Static),float,kilometres (km),Mean Euclidean distance from land pixels to nearest permanent water body,JRC Global Surface Water v1.4 (150m grid)
+near_water_1km_share,Hydrology (Static),float,proportion [0-1],Fraction of LGA land area within 1 km of permanent water,JRC Global Surface Water v1.4
+bare_share,Land Cover (Static),float,proportion [0-1],Fraction of LGA land area classified as bare or sparse vegetation (Class 60),ESA WorldCover v200 (10m)
+built_share,Land Cover (Static),float,proportion [0-1],Fraction of LGA land area classified as built-up / impervious surface (Class 50),ESA WorldCover v200 (10m)
+veg_share,Land Cover (Static),float,proportion [0-1],"Fraction of LGA land area covered by trees, shrubland, grassland, or crops (Classes 10-40)",ESA WorldCover v200 (10m)
+wetland_mangrove_share,Land Cover (Static),float,proportion [0-1],"Fraction of LGA land area classified as herbaceous wetland or mangrove (Classes 90, 95)",ESA WorldCover v200 (10m)
+population,Exposure (Annual),int,persons,Estimated annual resident population of the LGA (2010-2025),WorldPop 100m (R2025A & legacy harmonised)
+total_area_km2,Geometry (Static),float,km^2,Total geographic area of the LGA polygon (land + internal water),GADM v4.1 (EPSG:32631)
+land_area_km2,Geometry (Static),float,km^2,Effective land area of the LGA excluding permanent water,GADM v4.1 & JRC Water Mask
+pop_density_km2,Exposure (Annual),float,persons / km^2,Annual population density per square kilometre of land area,WorldPop & Land Area
+runoff_index,Interaction Feature,float,mm,Impervious surface runoff proxy: rain_total_mm * built_share,Engineered (CHIRPS x WorldCover)
+coastal_ponding_index,Interaction Feature,float,mm,Low-lying storm accumulation proxy: rain_max_3day_mm * low5_share,Engineered (CHIRPS x SRTM)
