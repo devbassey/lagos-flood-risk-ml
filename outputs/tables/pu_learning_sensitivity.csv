@@ -1,0 +1,7 @@
+Reporting_Propensity_c,Interpretation,Adjusted_Precision,Recall,PU_Adjusted_F1_Score
+0.5,50% of actual floods are reported,1.0,0.53,0.693
+0.6,60% of actual floods are reported,0.87,0.53,0.659
+0.7,70% of actual floods are reported,0.745,0.53,0.62
+0.8,80% of actual floods are reported,0.652,0.53,0.585
+0.192,19% of actual floods are reported,1.0,0.53,0.693
+1.0,Standard Fully Supervised (100% reported),0.522,0.53,0.526

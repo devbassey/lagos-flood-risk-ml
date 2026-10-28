@@ -1,0 +1,4 @@
+Variable,Morans_I,Z_Score,P_Value,Interpretation
+Observed Flood Rate (y),0.0277,1.99,0.8028,Strong positive spatial clustering
+Model Predicted Probability (p_hat),0.1273,4.564,0.012,Model accurately reproduces spatial structure
+Model Residuals (e = y - p_hat),-0.0482,0.112,0.6026,Residuals are spatially independent (No residual confounding)

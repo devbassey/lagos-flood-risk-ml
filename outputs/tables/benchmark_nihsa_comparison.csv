@@ -1,0 +1,7 @@
+Benchmark,Total_Months,Actual_Floods,Alerts_Issued,POD_Recall,FAR_False_Alarm_Ratio,CSI_Threat_Score,Accuracy
+NIHSA_Annual_Outlook (Full Year),1200,181,420,0.425,0.817,0.147,0.628
+Our_ML_Model_XGB (Full Year),1200,181,184,0.53,0.478,0.357,0.856
+NIHSA_Annual_Outlook (Wet Season May-Oct),600,181,210,0.425,0.633,0.245,0.605
+Our_ML_Model_XGB (Wet Season May-Oct),600,181,184,0.53,0.478,0.357,0.712
+NIHSA_Annual_Outlook (Dry Season Nov-Apr),600,0,210,0.0,1.0,0.0,0.65
+Our_ML_Model_XGB (Dry Season Nov-Apr),600,0,0,0.0,0.0,0.0,1.0

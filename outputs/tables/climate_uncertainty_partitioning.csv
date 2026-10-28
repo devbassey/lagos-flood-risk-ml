@@ -1,0 +1,4 @@
+Period,GCM_Model_Uncertainty_Pct,Scenario_Uncertainty_Pct,GCM_Variance_x10e4,Scenario_Variance_x10e4,Total_Projection_Variance_x10e4
+2030s (2030–2039),100.0,0.0,13.3974,0.0019,13.3993
+2040s (2040–2045),99.9,0.1,12.2114,0.0122,12.2236
+2050 (2046–2050),99.9,0.1,11.9519,0.0112,11.963
