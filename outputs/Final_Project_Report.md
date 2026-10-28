@@ -116,7 +116,48 @@ flowchart LR
     C2 --> D1 --> D2
 ```
 
-### 3.2 Spatial Units and Topographic Masking (`01_lga_boundaries.ipynb` & `03_elevation_and_water.ipynb`)
+### 3.2 Comprehensive Data Sources & Satellite Assets Inventory
+Table 3.1 synthesises all primary datasets, satellite Earth observation collections, and disaster archives integrated into the master feature store.
+
+| Dataset Name | Source / Provider | Earth Engine Snippet / Path | Native Spatial Resolution | Native Temporal Resolution | Temporal Range Used | Key Variables Extracted | Primary Use in Project |
+| :--- | :--- | :--- | :---: | :---: | :---: | :--- | :--- |
+| **GADM Administrative Boundaries v4.1** | GADM / UC Davis | `data/raw/gadm41_NGA.gpkg` | Vector (Level 2) | Static (2022) | 2022 | 20 Lagos LGA administrative boundaries & polygon geometries | Spatial clipping, zonal reducers, spatial join |
+| **CHIRPS Daily Precipitation v2.0** | UCSB Climate Hazards Group / USGS | `UCSB-CHG/CHIRPS/DAILY` | $0.05^\circ$ ($\approx 5.5\text{ km}$) | Daily ($06:00\text{ UTC}$) | `2010-01-01` to `2025-12-31` | `rain_total_mm`, `rain_max_daily_mm`, `rain_max_3day_mm`, `rainy_days`, `rain_2m_cum_mm`, `rain_anom_z` | Hydrometeorological hazard features |
+| **USGS SRTM Digital Elevation v3** | NASA / USGS JPL | `USGS/SRTMGL1_003` | $1\text{ arc-second}$ ($\approx 30\text{ m}$) | Static (Feb 2000) | 2000 | `elev_mean_m`, `elev_median_m`, `elev_min_m`, `elev_std_m`, `low5_share`, `low10_share`, `slope_mean_deg` | Topographic susceptibility & surge exposure |
+| **JRC Global Surface Water v1.4** | European Commission Joint Research Centre | `JRC/GSW1_4/GlobalSurfaceWater` | $30\text{ m}$ | Multi-decadal summary (`1984–2021`) | 1984–2021 | `water_occurrence_pct`, permanent water mask ($\ge 50\%$), `dist_water_mean_km`, `near_water_1km_share` | Water masking of DEM & proximity features |
+| **ESA WorldCover 10m 2021 v200** | European Space Agency (ESA) | `ESA/WorldCover/v200` | $10\text{ m}$ | Annual (2021) | 2021 | Built-up (`built_share`), Tree cover (`veg_share`), Mangroves & Wetlands (`wetland_mangrove_share`), Bare land (`bare_share`) | Imperviousness, drainage capacity, nature buffers |
+| **WorldPop Unconstrained Gridded Pop** | WorldPop / Univ. Southampton | `WorldPop/GP/100m/pop` & `.../R2025A/v1/pop` | $100\text{ m}$ (1 hectare) | Annual | `2010–2025` | `population`, `pop_density_km2`, annual growth rate | Human exposure & vulnerable population estimation |
+| **Historical Flood Events Log & Archives** | NEMA, NIHSA, LASEMA, EM-DAT, DFO, News | `data/raw/flood_events/flood_events_log.csv` & `GLOBAL_FLOOD_DB` | Community / LGA text & vector polygons | Monthly event-level | `2010–2025` | Event dates, impacted LGAs, communities, severity, source citations | Ground-truth supervised binary target label (`flood`) |
+| **NASA NEX-GDDP-CMIP6** | NASA Ames Research Center | `NASA/GDDP-CMIP6` | $0.25^\circ$ ($\approx 25\text{ km}$) | Daily | `2010–2014` (Hist) & `2030–2050` (Future) | Daily precipitation (`pr`) across 5 GCMs (`ACCESS-CM2`, `GFDL-ESM4`, `MPI-ESM1-2-HR`, `MRI-ESM2-0`, `UKESM1-0-LL`) | Climate projections under SSP2-4.5 & SSP5-8.5 |
+| **IPCC AR6 Sea-Level Rise Projections** | IPCC Working Group I | IPCC AR6 Sea Level Projection Tool (Gulf of Guinea) | Regional coastal gauge ($1^\circ$) | Decadal | 2030, 2040, 2050 | Median regional relative sea-level rise ($\Delta\text{SLR}$: $+0.11\text{–}0.40\text{ m}$) | Coastal elevation depression & low-land expansion |
+
+---
+
+### 3.3 Computational Tools, Software Stack & Engineering Environment
+Table 3.2 details the complete software environment, programming languages, analytical libraries, and cloud infrastructure used to develop, train, validate, and deploy the system.
+
+| Category | Tool / Library Name | Environment / Version | Primary Role & Capabilities | Project Utilization |
+| :--- | :--- | :---: | :--- | :--- |
+| **Programming Language** | **Python** | `3.13.9` (64-bit) | Core development, data pipelines, model training, and web dashboard execution | Standard language across all 9 notebooks, CLI scripts, and web apps |
+| **Cloud Geospatial Engine** | **Google Earth Engine (GEE)** | `earthengine-api` `1.4.3` | Cloud-scale planetary Earth observation computing and zonal reducers | Extracted CHIRPS daily sums, SRTM elevation, JRC water, WorldCover, WorldPop, and CMIP6 grids |
+| **Geospatial & Vector Analytics** | **GeoPandas & Fiona** | `geopandas` `1.0.1` | Vector spatial processing, GeoPackage I/O, coordinate reprojections | Managed LGA boundaries (`EPSG:4326` and `EPSG:32631`), geometric unions, spatial joins |
+| **Geometric Operations** | **Shapely & PyProj** | `shapely` `2.0.6`, `pyproj` `3.7.0` | Planar geometry calculations, spatial filtering, UTM reprojection | Verified topological validity of polygons and geodesic distance calculations |
+| **Numerical & Tabular Data** | **Pandas & NumPy** | `pandas` `2.2.3`, `numpy` `2.1.3` | High-performance tabular transformation, rolling windows, array algebra | Feature store assembly, antecedent lag computation, QDM bias correction scaling |
+| **Scientific Computing** | **SciPy** | `scipy` `1.14.1` | Non-parametric hypothesis testing and statistical distributions | Two-sided Mann–Whitney $U$ tests, rank-biserial effect sizes, Spearman correlations |
+| **Machine Learning Core** | **Scikit-Learn** | `scikit-learn` `1.5.2` | Preprocessing, cross-validation iterators, metrics, probability calibration | `StandardScaler`, `TimeSeriesSplit`, `LeaveOneGroupOut`, `CalibratedClassifierCV`, PR/ROC AUC |
+| **Gradient Boosting** | **XGBoost** | `xgboost` `2.1.3` | Scalable gradient boosted decision trees with domain monotonic constraints | Monotonic classification, hyperparameter tuning, fast inference |
+| **Random Forests** | **Scikit-Learn Ensemble** | `scikit-learn` `1.5.2` | Balanced subsampled random forests with out-of-bag validation | Cost-sensitive baseline and non-linear ensemble comparison |
+| **Explainable AI (XAI)** | **SHAP** | `shap` `0.46.0` | Cooperative game-theoretic feature attributions (TreeSHAP) | Local and global feature importance, beeswarm summary plots, partial dependence analysis |
+| **Interactive Web Dashboard** | **Streamlit** | `streamlit` `1.40.1` | Reactive web application framework for data science and model deployment | Multi-tab decision-support dashboard (`app.py`) with real-time What-If scenario simulation |
+| **Interactive Cartography** | **Folium / Leaflet.js** | `folium` `0.18.0` | Client-side interactive slippy maps, GeoJSON overlays, choropleths | Multi-layer interactive flood risk map (`outputs/maps/lagos_flood_risk_interactive.html`) |
+| **Static Visualizations** | **Matplotlib & Seaborn** | `matplotlib` `3.9.2`, `seaborn` `0.13.2` | Publication-ready figures, ROC/PR curves, confusion matrices, heatmaps | Generated 11 high-resolution figures in `outputs/figures/` (300 DPI) |
+| **Model Serialization** | **Joblib** | `joblib` `1.4.2` | Compressed binary persistence of fitted pipelines and calibrated models | Saved `outputs/models/flood_model_bundle.joblib` for headless production inference |
+| **Office Document Generation** | **Standard Zipfile + OpenXML** | Python Standard Library | Zero-dependency native packaging of Word (`.docx`) and PowerPoint (`.pptx`) | Automated synthesis of formatted Word project report and 15-slide PowerPoint deck |
+| **Cloud & Local Runtime** | **Anaconda / Windows 11** | Conda Environment | Isolated reproducible dependency management | Dedicated execution environment ensuring zero package conflicts |
+
+---
+
+### 3.4 Spatial Units and Topographic Masking (`01_lga_boundaries.ipynb` & `03_elevation_and_water.ipynb`)
 1. **Administrative Boundaries**: Level-2 administrative polygons for Nigeria were loaded from [`gadm41_NGA.gpkg`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/raw/gadm41_NGA.gpkg), filtered to the **20 LGAs of Lagos State**, verified for topological validity, and saved to [`lagos_lgas.gpkg`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/clean/lagos_lgas.gpkg).
 2. **Water-Masked Elevation Statistics**: A critical methodological pitfall in coastal DEM analysis is averaging elevation over an entire administrative polygon that includes open lagoon or ocean water (which SRTM records as $0\text{ m}$). In [`03_elevation_and_water.ipynb`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/notebooks/03_elevation_and_water.ipynb), we used **JRC Global Surface Water (`JRC/GSW1_4/GlobalSurfaceWater`, 30 m)** to define permanent water (`occurrence >= 50%`) and masked out all permanent water pixels *before* computing land elevation statistics from **USGS SRTM (`USGS/SRTMGL1_003`, 30 m)**:
    - `elev_mean_m`, `elev_median_m`, `elev_min_m`, `elev_max_m`, `elev_std_m`
@@ -125,18 +166,18 @@ flowchart LR
    - `slope_mean_deg`: Mean terrain slope in degrees
 3. **Euclidean Distance to Permanent Water**: Reprojecting into metric **UTM Zone 31N (`EPSG:32631`)** at $150\text{ m}$ grid resolution, we applied Earth Engine's Euclidean distance transform (`fastDistanceTransform`) verified with a physical direction assertion (confirming distance is $0\text{ m}$ on water and $3,754\text{ m}$ mean on land) to compute `dist_water_mean_km` and `near_water_1km_share` ([`terrain_water_lga.csv`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/clean/terrain_water_lga.csv)).
 
-### 3.3 Daily-to-Monthly & Antecedent Rainfall Engineering (`02_rainfall_chirps.ipynb`)
+### 3.5 Daily-to-Monthly & Antecedent Rainfall Engineering (`02_rainfall_chirps.ipynb`)
 Daily precipitation from **CHIRPS v2.0 (`UCSB-CHG/CHIRPS/DAILY`)** from `2010-01-01` to `2025-12-31` (`5,844 days × 20 LGAs = 116,880 rows`, saved in [`chirps_daily_lga.csv`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/raw/chirps_daily_lga.csv)) was transformed into 10 monthly and seasonal features in [`rainfall_lga_month.csv`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/clean/rainfall_lga_month.csv):
 - **Current-Month Intensity & Volume**: `rain_total_mm`, `rain_max_daily_mm` ($\text{Rx1day}$), `rain_max_3day_mm` ($\text{Rx3day}$), `rain_max_7day_mm` ($\text{Rx7day}$), `rainy_days` ($\ge 1\text{ mm}$), and `heavy_rain_days` ($\ge 20\text{ mm}$). Rolling 3-day and 7-day sums were computed on the continuous daily series *prior* to monthly aggregation so cross-month storms are captured accurately.
 - **Antecedent Soil & Lagoon Saturation Proxies**: `rain_prev_month_mm` (lag-1 month total rainfall in the same LGA) and `rain_2m_cum_mm` ($\text{rain\_total\_mm} + \text{rain\_prev\_month\_mm}$).
 - **Local Climatological Anomaly**: `rain_anom_z`, the standardised $z$-score of monthly rainfall relative to each LGA's `2010–2020` training-period mean and standard deviation (avoiding test-period leakage).
 - **Cyclical Seasonality**: $\text{month\_sin} = \sin(2\pi m / 12)$ and $\text{month\_cos} = \cos(2\pi m / 12)$.
 
-### 3.4 Land Cover and Harmonised Annual Population (`05_population_landcover.ipynb`)
+### 3.6 Land Cover and Harmonised Annual Population (`05_population_landcover.ipynb`)
 - **Land Cover (`ESA/WorldCover/v200`, 10 m)**: Masking out open water (Class 80), we extracted each LGA's fraction of land covered by impervious built-up surfaces (`built_share`, Class 50), herbaceous wetlands and mangroves (`wetland_mangrove_share`, Classes 90 & 95), permeable vegetation (`veg_share`, Classes 10–40), and bare ground (`bare_share`, Class 60) into [`landcover_lga.csv`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/clean/landcover_lga.csv).
 - **Annual Population (`2010–2025`, 100 m)**: Extracted from `WorldPop/GP/100m/R2025A/v1/pop` (`2015–2025`) and `WorldPop/GP/100m/pop` (`2010–2015`), spliced smoothly per LGA using the 2015 overlap ratio so no discontinuity occurs between releases ([`population_lga_year.csv`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projects/lagos-flood-risk-ml/data/clean/population_lga_year.csv)).
 
-### 3.5 Target Variable Construction & Labelling Rule (`04_flood_records.ipynb`)
+### 3.7 Target Variable Construction & Labelling Rule (`04_flood_records.ipynb`)
 > [!IMPORTANT]
 > **Explicit Flood Labelling Rule**: An LGA-month $(i, t)$ is assigned `flood = 1` if at least one credible documentary or satellite source records a flood event affecting LGA $i$ during calendar month $t$; otherwise `flood = 0` ("no documented flood").
 
@@ -146,7 +187,7 @@ In [`04_flood_records.ipynb`](file:///c:/Users/LENOVO/Desktop/Portfolio%20Projec
 
 Across the `3,840` LGA-month cells (`20 LGAs × 192 months`), exactly **`423` LGA-months (`11.02%`)** are labelled `flood = 1`.
 
-### 3.6 Summary Profile of the 20 Lagos State LGAs (Master Dataset)
+### 3.8 Summary Profile of the 20 Lagos State LGAs (Master Dataset)
 
 | LGA | Land Area ($\text{km}^2$) | Mean Elev ($\text{m}$) | Land $<5\text{ m}$ (%) | Land $<10\text{ m}$ (%) | Mean Dist to Water ($\text{km}$) | Built-Up Share (%) | Wetland / Mangrove (%) | 2025 Gridded Pop | 2025 Pop Density ($\text{/km}^2$) | Mean Annual Rain ($\text{mm}$) | Flood Months (`2010–2025`) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
