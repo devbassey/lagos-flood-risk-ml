@@ -1,0 +1,21 @@
+lga,FRI_Baseline,Tier_Baseline,Exposed_Pop_Baseline,Rank_Baseline,FRI_2050_SSP245,FRI_Min_245,FRI_Max_245,Tier_2050_SSP245,Exposed_Pop_2050_SSP245,Rank_2050_SSP245,FRI_2050_SSP585,FRI_Min_585,FRI_Max_585,Tier_2050_SSP585,Exposed_Pop_2050_SSP585,Rank_2050_SSP585,FRI_Change_SSP585
+Lagos Island,52.4,High,53858,1,55.7,54.3,57.1,High,88415,1,56.5,56.2,57.2,High,98299,1,4.1
+Apapa,49.7,High,68222,2,54.8,53.4,56.0,High,115180,2,56.2,55.6,57.3,High,128590,2,6.5
+Kosofe,47.7,Moderate,70336,4,50.6,49.4,51.9,High,112965,4,52.6,52.0,53.5,High,135904,3,4.9
+Eti-Osa,47.9,Moderate,128702,3,51.4,49.9,53.0,High,200797,3,51.8,51.4,52.7,High,212418,4,3.9
+Amuwo Odofin,44.2,Moderate,122701,8,49.8,48.8,50.8,High,226766,6,51.7,51.2,52.5,High,266368,5,7.5
+Ajeromi/Ifelodun,47.2,Moderate,20808,5,50.2,49.3,51.3,High,31914,5,51.0,50.5,51.4,High,34910,6,3.8
+Mainland,45.6,Moderate,44175,6,49.2,48.0,50.5,High,69085,7,49.7,49.4,50.5,High,74106,7,4.1
+Surulere,44.8,Moderate,63835,7,47.1,46.0,48.6,Moderate,90686,8,47.5,47.1,48.3,Moderate,96324,8,2.7
+Shomolu,43.2,Moderate,26897,9,46.6,45.4,48.0,Moderate,41874,9,47.2,46.7,48.0,Moderate,45212,9,4.0
+Ojo,38.6,Moderate,84105,10,45.0,44.2,46.0,Moderate,174619,10,46.8,46.2,47.5,Moderate,205476,10,8.2
+Badagry,33.6,Low,86738,15,40.4,39.8,41.3,Moderate,186276,11,42.7,42.1,43.4,Moderate,227472,11,9.1
+Mushin,36.2,Moderate,9675,11,39.1,38.1,40.4,Moderate,14907,12,39.6,39.1,40.2,Moderate,15968,12,3.4
+Ikorodu,34.6,Moderate,60253,13,38.4,37.2,39.7,Moderate,104382,13,39.5,38.8,40.5,Moderate,119359,13,4.9
+Alimosho,33.5,Low,64848,16,38.3,37.7,39.4,Moderate,110739,15,39.2,38.8,39.8,Moderate,120912,14,5.7
+Ikeja,34.8,Moderate,19477,12,38.4,37.6,39.4,Moderate,32759,13,38.9,38.5,39.4,Moderate,35445,15,4.1
+Oshodi/Isolo,32.7,Low,16268,18,36.3,35.4,37.3,Moderate,27891,17,36.8,36.5,37.5,Moderate,30403,16,4.1
+Agege,34.2,Moderate,9014,14,36.4,35.7,37.4,Moderate,13217,16,36.7,36.3,37.1,Moderate,13988,17,2.5
+Ifako/Ijaye,33.1,Low,15867,17,35.9,35.3,36.8,Moderate,24835,18,36.2,35.8,36.6,Moderate,26347,18,3.1
+Epe,20.0,Low,12496,20,28.5,27.3,29.6,Low,39949,19,30.2,29.5,31.2,Low,48462,19,10.2
+Ibeju-Lekki,21.8,Low,15361,19,28.4,27.3,29.4,Low,39137,20,29.8,29.0,30.9,Low,46244,20,8.0
